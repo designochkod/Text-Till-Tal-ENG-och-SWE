@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text till Tal</title>
+<style>
+  :root {
+    --bg-main: #0f172a;
+    --bg-card: #1e293b;
+    --bg-input: #0f172a;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --secondary: #475569;
+    --secondary-hover: #334155;
+    --border: #334155;
+    --accent: #10b981;
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+}
+.container {
+    background-color: var(--bg-card);
+    width: 100%;
+    max-width: 500px;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border);
+}
+h1 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+h1 svg {
+    color: var(--primary);
+}
+.control-group {
+    margin-bottom: 16px;
+}
+.control-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+.control-label svg {
+    color: var(--text-muted);
+}
+.control-label-inline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+.toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--bg-input);
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+}
+.toggle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 24px;
+}
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider-toggle {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--border);
+    transition: .3s;
+    border-radius: 24px;
+}
+.slider-toggle:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+}
+input:checked + .slider-toggle {
+    background-color: var(--accent);
+}
+input:checked + .slider-toggle:before {
+    transform: translateX(24px);
+}
+.lang-indicator {
+    font-weight: 600;
+    color: var(--text-main);
+    min-width: 55px;
+    text-align: right;
+}
+select {
+    width: 100%;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://w3.org' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+}
+.range-container {
+    background-color: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.range-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    outline: none;
+}
+.range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--primary);
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.range-slider::-webkit-slider-thumb:hover {
+    background: var(--primary-hover);
+}
+.range-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    min-width: 35px;
+    text-align: right;
+}
+textarea {
+    width: 100%;
+    height: 140px;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    color: var(--text-main);
+    font-size: 1rem;
+    resize: none;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 20px;
+    margin-top: 4px;
+}
+textarea:focus {
+    border-color: var(--primary);
+}
+textarea::placeholder {
+    color: var(--text-muted);
+}
+.button-group {
+    display: flex;
+    gap: 12px;
+}
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s, transform 0.1s, opacity 0.2s;
+}
+button:active:not(:disabled) {
+    transform: scale(0.98);
+}
+button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+.btn-primary {
+    flex: 2;
+    background-color: var(--primary);
+    color: white;
+}
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--primary-hover);
+}
+.btn-secondary {
+    flex: 1;
+    background-color: var(--secondary);
+    color: white;
+}
+.btn-secondary:hover:not(:disabled) {
+    background-color: var(--secondary-hover);
+}
+</style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+            Naturlig Text till tal
+        </h1>
+
+        <div class="control-group">
+            <label class="toggle-container">
+                <div class="control-label-inline">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg>
+                    <span>Inmatningsspråk:</span>
+                </div>
+                <div class="toggle-wrapper">
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="langToggle">
+                        <span class="slider-toggle"></span>
+                    </div>
+                    <span class="lang-indicator" id="langText">sv-SE</span>
+                </div>
+            </label>
+        </div>
+
+        <div class="control-group">
+            <div class="control-label">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span>Välj röst:</span>
+            </div>
+            <select id="voiceSelect"></select>
+        </div>
+
+        <div class="control-group">
+            <div class="control-label">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span>Hastighet:</span>
+            </div>
+            <div class="range-container">
+                <input type="range" id="rateSlider" class="range-slider" min="0.5" max="1.5" step="0.05" value="0.95">
+                <span class="range-value" id="rateValue">0.95x</span>
+            </div>
+        </div>
+
+        <textarea id="textInput" placeholder="Skriv den text du vill få uppläst här..."></textarea>
+
+        <div class="button-group">
+            <button id="speakBtn" class="btn-primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+                <span>Läs upp text</span>
+            </button>
+            <button id="pauseBtn" class="btn-secondary" disabled>
+                <svg id="pauseIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+                <span id="pauseBtnText">Pausa</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+      const textInput = document.getElementById('textInput');
+const langToggle = document.getElementById('langToggle');
+const langText = document.getElementById('langText');
+const voiceSelect = document.getElementById('voiceSelect');
+const rateSlider = document.getElementById('rateSlider');
+const rateValue = document.getElementById('rateValue');
+const speakBtn = document.getElementById('speakBtn');
+const pauseBtn = document.getElementById('pauseBtn');
+const pauseBtnText = document.getElementById('pauseBtnText');
+const pauseIcon = document.getElementById('pauseIcon');
+
+let allVoices = [];
+
+const placeholders = {
+    sv: "Skriv den text du vill få uppläst här...",
+    en: "Type the text you want to be read out loud here..."
+};
+
+const pauseSVG = `<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>`;
+const playSVG = `<polygon points="5 3 19 12 5 21 5 3"></polygon>`;
+
+function populateVoices() {
+    if (typeof speechSynthesis === 'undefined') return;
+    
+    allVoices = window.speechSynthesis.getVoices();
+    const currentLang = langToggle.checked ? 'en-US' : 'sv-SE';
+    
+    voiceSelect.innerHTML = '';
+    
+    const filteredVoices = allVoices.filter(voice => voice.lang.toLowerCase().includes(currentLang.toLowerCase()));
+    
+    if (filteredVoices.length === 0) {
+        const opt = document.createElement('option');
+        opt.textContent = `Standardröst (${currentLang})`;
+        opt.value = 'default';
+        voiceSelect.appendChild(opt);
+        return;
+    }
+
+    filteredVoices.sort((a, b) => {
+        const aNatural = a.name.toLowerCase().includes('natural') || a.name.toLowerCase().includes('google');
+        const bNatural = b.name.toLowerCase().includes('natural') || b.name.toLowerCase().includes('google');
+        return bNatural - aNatural;
+    });
+
+    filteredVoices.forEach(voice => {
+        const option = document.createElement('option');
+        option.textContent = `${voice.name} (${voice.lang})`;
+        option.value = voice.name;
+        voiceSelect.appendChild(option);
+    });
+}
+
+if (typeof speechSynthesis !== 'undefined') {
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = populateVoices;
+    }
+    populateVoices();
+}
+
+function updatePauseButtonState() {
+    if (window.speechSynthesis.paused) {
+        pauseBtnText.textContent = langToggle.checked ? 'Resume' : 'Fortsätt';
+        pauseIcon.innerHTML = playSVG;
+    } else {
+        pauseBtnText.textContent = langToggle.checked ? 'Pause' : 'Pausa';
+        pauseIcon.innerHTML = pauseSVG;
+    }
+}
+
+langToggle.addEventListener('change', () => {
+    if (langToggle.checked) {
+        langText.textContent = 'en-US';
+        textInput.placeholder = placeholders.en;
+        if (!window.speechSynthesis.speaking) pauseBtnText.textContent = 'Pause';
+    } else {
+        langText.textContent = 'sv-SE';
+        textInput.placeholder = placeholders.sv;
+        if (!window.speechSynthesis.speaking) pauseBtnText.textContent = 'Pausa';
+    }
+    populateVoices();
+});
+
+rateSlider.addEventListener('input', () => {
+    rateValue.textContent = rateSlider.value + 'x';
+});
+
+speakBtn.addEventListener('click', () => {
+    const text = textInput.value.trim();
+    if (!text) return;
+
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    const currentLang = langToggle.checked ? 'en-US' : 'sv-SE';
+    utterance.lang = currentLang;
+    utterance.rate = parseFloat(rateSlider.value);
+
+    const selectedVoiceName = voiceSelect.value;
+    if (selectedVoiceName && selectedVoiceName !== 'default') {
+        const matchedVoice = allVoices.find(voice => voice.name === selectedVoiceName);
+        if (matchedVoice) {
+            utterance.voice = matchedVoice;
+        }
+    }
+
+    utterance.onstart = () => {
+        pauseBtn.disabled = false;
+        updatePauseButtonState();
+    };
+
+    utterance.onend = () => {
+        pauseBtn.disabled = true;
+        pauseIcon.innerHTML = pauseSVG;
+        pauseBtnText.textContent = langToggle.checked ? 'Pause' : 'Pausa';
+    };
+
+    utterance.onerror = () => {
+        pauseBtn.disabled = true;
+    };
+
+    window.speechSynthesis.speak(utterance);
+});
+
+pauseBtn.addEventListener('click', () => {
+    if (!window.speechSynthesis.speaking) return;
+
+    if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+    } else {
+        window.speechSynthesis.pause();
+    }
+    
+    setTimeout(updatePauseButtonState, 50);
+});
+    </script>
+</body>
+</html>
